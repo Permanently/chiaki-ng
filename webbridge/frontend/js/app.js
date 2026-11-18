@@ -321,8 +321,11 @@ class ActiveSession {
     $('view-stream').addEventListener('pointerdown', this._onFsGesture);
 
     // Immersive mode: best-effort, silently tolerated failures (iOS).
+    // Fullscreen the whole document, not #view-stream: only the fullscreen
+    // element's subtree is rendered, so the modals (login PIN, menu, help)
+    // would otherwise be hidden behind the stream.
     try {
-      await $('view-stream').requestFullscreen({ navigationUI: 'hide' });
+      await document.documentElement.requestFullscreen({ navigationUI: 'hide' });
     } catch (e) {
       /* not available / denied */
     }
@@ -570,7 +573,7 @@ class ActiveSession {
     $('menu-fullscreen').onclick = async () => {
       try {
         if (document.fullscreenElement) await document.exitFullscreen();
-        else await $('view-stream').requestFullscreen({ navigationUI: 'hide' });
+        else await document.documentElement.requestFullscreen({ navigationUI: 'hide' });
       } catch (e) {
         /* unsupported */
       }
